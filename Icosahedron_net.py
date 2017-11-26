@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 from globes.projection import Icosahedron
 from globes.import_stars import get_stars
 
@@ -388,68 +389,13 @@ class IcosahedronNet():
         # Load, project and plot stars
         if stars:
             stars = get_stars(dataDir=dataDir)
-            for s in stars:
-                # largest stars with star marker, others with dot
-                if s.mag < 2.5:
-                    m = '*'
-                    size=30*np.exp(-s.mag)
-                else:
-                    m = 'o'
-                    size=30*np.exp(-s.mag)
-                
-                # plot names for some stars
-                if s.name == 'Sirius':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=0.02, yoff=0.02, rot=60)
-                elif s.name == 'Vega':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.25, yoff=0.1, rot=240)
-                elif s.name == 'Canopus':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.05, yoff=0.05, rot=60)
-                elif s.name=='Alpha Centauri':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.22, yoff=0.12, rot=-60)
-                elif s.name=='Arcturus':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.22, yoff=0.12, rot=-60)
-                elif s.name=='Capella':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.22, yoff=0.12, rot=240)
-                elif s.name=='Rigel':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=0., yoff=0., rot=60)
-                elif s.name=='Procyon':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.2, yoff=0.05, rot=300)
-                elif s.name=='Achernar':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.2, yoff=0., rot=300)
-                elif s.name=='Betelgeuse':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=-0.1, yoff=0.1, rot=60)
-                elif s.name=='Polaris':
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=0., yoff=0.1, rot=120)
-                elif s.name is not None:
-                    self.plot_point([s.dec, s.ra], ax, zorder=2,
-                                    c=starc, s=size, marker=m, 
-                                    text=s.name, xoff=0., yoff=0., rot=60)
-                # all cases without names
-                else:
-                    self.plot_point([s.dec, s.ra], ax, c=starc, s=size, 
-                                marker=m, zorder=2) 
+            cmap = matplotlib.cm.get_cmap('viridis')
+            cnorm = matplotlib.colors.Normalize(vmin=-10., vmax=150.)
+
+            star_coords = np.array([[s.dec, s.ra] for s in stars])
+            star_colors = cmap(cnorm([s.mag for s in stars]))
+
+            self.plot_point(star_coords, ax, c=star_colors, s=4.5, marker='o', zorder=2)
 
         ax.legend(loc=[0.9, 0.8], fontsize=14)
         ax.axis('off')
