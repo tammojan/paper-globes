@@ -356,6 +356,7 @@ class IcosahedronNet():
         ax = fig.add_subplot(111)
         ax.set_xlim([-0.55*edge_width*self.scale, xsize])
         ax.set_ylim([0, ysize])
+        ax.set_aspect('equal', 'datalim')
         # draw background first, so lowest zorder
         if bgc:
             ax.axhspan(0.0, yspan, xmin=0.0, xmax=xspan/xsize, 
