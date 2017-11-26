@@ -97,7 +97,7 @@ class IcosahedronNet():
         """
         x = [n1[0], n2[0]]
         y = [n1[1], n2[1]]
-        ax.plot(x, y, c=c, ls=ls, label=label)
+        ax.plot(x, y, c=c, ls=ls, linewidth=0.5, label=label)
         
     def plot_net(self, ax, c='k', fold_ls = '--', cut_ls = '-', label=None):
         """
@@ -363,7 +363,7 @@ class IcosahedronNet():
                        facecolor=bgc, alpha=bgalpha, zorder=0)
         
         # Plot icosahedron net and glue bands
-        self.plot_net(ax, c=linec, fold_ls='--', cut_ls='-', label = 'Fold me')
+        self.plot_net(ax, c=linec, fold_ls='None', cut_ls='-', label = 'Fold me')
         self.plot_glue_bands(ax, w=edge_width, c=linec, ls='-', label='Cut me')
         
         # text for last triangle to glue
@@ -375,8 +375,8 @@ class IcosahedronNet():
         title_text_pos = self.node(0.0, 1.0)
         ax.text(title_text_pos[0], title_text_pos[1], 'Galaxy paper globe', 
                 rotation=-60, color=starc, fontsize=20)
-        ax.text(0.0, 0.1, 'github.com/Janna112358/paper-globes',
-                color=starc, fontsize=12)
+        #ax.text(0.0, 0.1, 'github.com/Janna112358/paper-globes',
+        #        color=starc, fontsize=12)
         
         # plot north and south poles as dots
         if poles:
@@ -390,13 +390,15 @@ class IcosahedronNet():
         # Load, project and plot stars
         if stars:
             stars = get_stars(dataDir=dataDir)
-            cmap = matplotlib.cm.get_cmap('viridis')
-            cnorm = matplotlib.colors.Normalize(vmin=-10., vmax=150.)
+            cmap = matplotlib.cm.get_cmap('gray_r')
+            cnorm = matplotlib.colors.Normalize(vmin=0., vmax=120.)
 
             star_coords = np.array([[s.dec, s.ra] for s in stars])
             star_colors = cmap(cnorm([s.mag for s in stars]))
+            star_sizes = star_sizes=12*np.ones((len(stars)))
+            star_sizes[np.where(np.isclose(star_coords[:,0],np.pi/2))]=24
 
-            self.plot_point(star_coords, ax, c=star_colors, s=4.5, marker='o', zorder=2)
+            self.plot_point(star_coords, ax, c=star_colors, s=star_sizes, marker='o', zorder=2)
 
         ax.legend(loc=[0.9, 0.8], fontsize=14)
         ax.axis('off')

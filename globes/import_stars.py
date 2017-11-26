@@ -9,9 +9,9 @@ import sys
 def get_stars(dataDir=None):
     # Get path to stars.dat and check whether is exists
     if dataDir is None:
-        path = './stars.dat'
+        path = './mystars.dat'
     else:
-        path = os.path.join(dataDir, 'stars.dat')
+        path = os.path.join(dataDir, 'mystars.dat')
     try:
         assert(os.path.exists(path))
     except AssertionError:
